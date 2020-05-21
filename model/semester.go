@@ -28,7 +28,7 @@ func Create(semester Semester) (Semester, error) {
 	fmt.Println(semester)
 	row := infrastructure.DB.QueryRow(`
 	INSERT INTO semester(name, date_range)
-	VALUES ($1, '[$2, $3)'::daterange)
+	VALUES ($1, [$2, $3))
 	RETURNING id;`, semester.Name, semester.Start[:10], semester.End[:10])
 	err := row.Scan(&semester.Id)
 	return semester, err
