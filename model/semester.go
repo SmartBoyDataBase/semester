@@ -18,8 +18,9 @@ func Get(id uint64) (Semester, error) {
 	}
 	row := infrastructure.DB.QueryRow(`
 	SELECT name, start, "end"
-	FROM semester;
-	`)
+	FROM semester
+	WHERE id=$1;
+	`, id)
 	err := row.Scan(&result.Name, &result.Start, &result.End)
 	return result, err
 }
