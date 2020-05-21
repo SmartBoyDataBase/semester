@@ -1,6 +1,9 @@
 package model
 
-import "sbdb-semester/infrastructure"
+import (
+	"fmt"
+	"sbdb-semester/infrastructure"
+)
 
 type Semester struct {
 	Id    uint64 `json:"id"`
@@ -22,6 +25,7 @@ func Get(id uint64) (Semester, error) {
 }
 
 func Create(semester Semester) (Semester, error) {
+	fmt.Println(semester)
 	row := infrastructure.DB.QueryRow(`
 	INSERT INTO semester(name, date_range)
 	VALUES ($1, '[$2, $3)'::daterange)
