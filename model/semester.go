@@ -24,8 +24,8 @@ func Get(id uint64) (Semester, error) {
 func Create(semester Semester) (Semester, error) {
 	row := infrastructure.DB.QueryRow(`
 	INSERT INTO semester(name, date_range)
-	VALUES ($1, $2)
-	RETURNING id;`)
+	VALUES ($1, '[$2, $3)')
+	RETURNING id;`, semester.Name, semester.Start, semester.End)
 	err := row.Scan(&semester.Id)
 	return semester, err
 }
