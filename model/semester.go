@@ -17,7 +17,7 @@ func Get(id uint64) (Semester, error) {
 		Id: id,
 	}
 	row := infrastructure.DB.QueryRow(`
-	SELECT name, lower(date_range), upper(date_range)
+	SELECT name, start, "end"
 	FROM semester;
 	`)
 	err := row.Scan(&result.Name, &result.Start, &result.End)
@@ -27,8 +27,8 @@ func Get(id uint64) (Semester, error) {
 func Create(semester Semester) (Semester, error) {
 	fmt.Println(semester)
 	row := infrastructure.DB.QueryRow(`
-	INSERT INTO semester(name, date_range)
-	VALUES ($1, [$2, $3))
+	INSERT INTO semester(name, start,"end")
+	VALUES ($1, $2, $3)
 	RETURNING id;`, semester.Name, semester.Start[:10], semester.End[:10])
 	err := row.Scan(&semester.Id)
 	return semester, err
@@ -36,7 +36,7 @@ func Create(semester Semester) (Semester, error) {
 
 func All() ([]Semester, error) {
 	rows, err := infrastructure.DB.Query(`
-	SELECT id,name,lower(date_range), upper(date_range)
+	SELECT id,name,start, "end"
 	FROM semester;
 	`)
 	if err != nil {
