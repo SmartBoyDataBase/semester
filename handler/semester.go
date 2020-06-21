@@ -40,12 +40,31 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(response)
 }
 
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	body, _ := ioutil.ReadAll(r.Body)
+	var toDelete model.Semester
+	_ = json.Unmarshal(body, &toDelete)
+	err := model.Delete(toDelete)
+	if err != nil {
+		log.Println("Create semester failed")
+		_, _ = w.Write([]byte(err.Error()))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	} else {
+		log.Println("Semester ", toDelete.Name, "deleted")
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
 func Handler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		getHandler(w, r)
 	case "POST":
 		postHandler(w, r)
+	case "DELETE":
+		deleteHandler(w, r)
 	}
 }
 

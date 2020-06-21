@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"sbdb-semester/infrastructure"
 )
 
@@ -26,13 +25,19 @@ func Get(id uint64) (Semester, error) {
 }
 
 func Create(semester Semester) (Semester, error) {
-	fmt.Println(semester)
 	row := infrastructure.DB.QueryRow(`
 	INSERT INTO semester(name, start,"end")
 	VALUES ($1, $2, $3)
 	RETURNING id;`, semester.Name, semester.Start[:10], semester.End[:10])
 	err := row.Scan(&semester.Id)
 	return semester, err
+}
+
+func Delete(semester Semester) (err error) {
+	_, err = infrastructure.DB.Exec(`
+	DELETE FROM semester
+	WHERE id=$1;
+	`, semester.Id)
 }
 
 func All() ([]Semester, error) {
