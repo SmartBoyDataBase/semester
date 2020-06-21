@@ -33,11 +33,12 @@ func Create(semester Semester) (Semester, error) {
 	return semester, err
 }
 
-func Delete(semester Semester) (err error) {
-	_, err = infrastructure.DB.Exec(`
+func Delete(semester Semester) error {
+	_, err := infrastructure.DB.Exec(`
 	DELETE FROM semester
 	WHERE id=$1;
 	`, semester.Id)
+	return err
 }
 
 func All() ([]Semester, error) {
